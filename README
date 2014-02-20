@@ -1,0 +1,69 @@
+By Duncan Gray 
+duncan at netring co uk
+
+Please note I'm not liable for anything you use this script at your own risk, if you want to use it commercially please contact me first to seek approval.
+
+I have started create some tools for the BITMAIN TECH S1 Antminer, let me know if you have any requests and I may give it a go.
+If you need help installing these you can contact me, but I may expect a tip, the more tips I get the more likely I am to make more scripts :-)
+
+14qF1hj3SxAzyWkCxrkgSYPikM7faKqKAV
+
+First you will need to have access to your box via ssh and install the ssmtp package.
+
+Goto
+System > Software 
+Click on update lists
+Then look for the package ssmtp, install the package
+
+You will now need to configure the package, to use it you will need login details to a working email account.
+
+Edit the file
+
+/etc/ssmtp/ssmtp.conf 
+
+My configuration file contains the following
+
+root=email_to_send_from@yourdomain.co.uk
+mailhub=mail.yoursecuremailserver.com:587
+rewriteDomain=yourdomain.co.uk
+hostname=yourdomain.co.uk
+UseTLS=Yes
+UseSTARTTLS=Yes
+AuthUser=username@yourdomain.co.uk
+AuthPass=password
+
+Obviously though with the above settings swapped for ones that really exist, I use the port 587 as my mail server support TLS
+
+Edit
+/etc/ssmtp/revaliases
+Add an entry for your email address you are sending from
+root:email_to_send_from@yourdomain.co.uk:mail.yoursecureserver.com:587
+
+The above entry must match the setting for root or you are going to have sender verify issues.
+
+Temperature check - temp-check.sh
+
+I put my script in /usr/bin/ you probably want to put it else where but for now that works for me.
+
+remember to chmod +x temp-check.sh
+
+Now open the file up and edit the following settings at the top
+
+alert="where_you_want_your_alerts_sent@yourdomain.co.uk"
+hot=42
+
+Set hot to the temperature that you want it to shut the miner down and send you an email. 
+
+Now add the following line to your crontab
+
+You can do this through the web interface or
+crontab -e
+
+* * * * * /usr/bin/temp-check.sh
+
+This wil run the temperature check script every minute.
+
+From the web admin you can see if its running in the logs.
+
+
+
